@@ -17,9 +17,6 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
-/**
- * TODO Sprint add-controllers.
- */
 @Service
 public class ItemServiceImpl implements ItemService {
     private static final Logger log = LoggerFactory.getLogger(ItemServiceImpl.class);

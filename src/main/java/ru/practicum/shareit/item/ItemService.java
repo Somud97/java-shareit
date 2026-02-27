@@ -4,9 +4,6 @@ import ru.practicum.shareit.item.model.Item;
 
 import java.util.Collection;
 
-/**
- * TODO Sprint add-controllers.
- */
 public interface ItemService {
     Item create(Long ownerId, Item item);
 

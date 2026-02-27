@@ -1,13 +1,10 @@
 package ru.practicum.shareit.user.dto;
 
+import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.user.User;
 
-/**
- * TODO Sprint add-controllers.
- */
-public final class UserMapper {
-    private UserMapper() {
-    }
+@UtilityClass
+public class UserMapper {
 
     public static UserDto toUserDto(User user) {
         if (user == null) {

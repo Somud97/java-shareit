@@ -1,13 +1,10 @@
 package ru.practicum.shareit.item.dto;
 
+import lombok.experimental.UtilityClass;
 import ru.practicum.shareit.item.model.Item;
 
-/**
- * TODO Sprint add-controllers.
- */
-public final class ItemMapper {
-    private ItemMapper() {
-    }
+@UtilityClass
+public class ItemMapper {
 
     public static ItemDto toItemDto(Item item) {
         if (item == null) {

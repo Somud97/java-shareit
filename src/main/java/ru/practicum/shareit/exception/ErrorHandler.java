@@ -24,7 +24,14 @@ public class ErrorHandler {
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> handleNotFoundException(final NotFoundException e) {
-        log.warn("Ресурс не найден (404): {}", e.getMessage());
+        log.warn("ресурс не найден (404): {}", e.getMessage());
+        return Map.of("error", e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public Map<String, String> handleForbiddenException(final ForbiddenException e) {
+        log.warn("Доступ запрещён (403): {}", e.getMessage());
         return Map.of("error", e.getMessage());
     }
 

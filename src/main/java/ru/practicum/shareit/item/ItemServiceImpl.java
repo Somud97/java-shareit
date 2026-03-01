@@ -20,6 +20,8 @@ import ru.practicum.shareit.user.UserService;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -157,16 +159,24 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public Collection<ItemDto> getItemsWithDetailsForOwner(Long ownerId) {
-        return findByOwner(ownerId).stream()
+        List<Item> items = findByOwner(ownerId).stream().toList();
+        if (items.isEmpty()) {
+            return List.of();
+        }
+        List<Long> itemIds = items.stream().map(Item::getId).toList();
+        Map<Long, List<Comment>> commentsByItemId = commentRepository.findByItemIds(itemIds).stream()
+            .collect(Collectors.groupingBy(c -> c.getItem().getId()));
+
+        return items.stream()
             .map(item -> {
                 ItemDto dto = ItemMapper.toItemDto(item);
-                dto.setComments(commentRepository.findByItemId(item.getId()).stream()
+                dto.setComments(commentsByItemId.getOrDefault(item.getId(), List.of()).stream()
                     .map(CommentMapper::toDto)
-                    .collect(Collectors.toList()));
+                    .toList());
                 enrichWithBookingInfo(dto, item.getId());
                 return dto;
             })
-            .collect(Collectors.toList());
+            .toList();
     }
 
     private void enrichWithBookingInfo(ItemDto dto, Long itemId) {

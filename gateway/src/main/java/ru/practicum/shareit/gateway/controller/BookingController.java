@@ -2,7 +2,9 @@ package ru.practicum.shareit.gateway.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +18,7 @@ import ru.practicum.shareit.gateway.client.BookingClient;
 import ru.practicum.shareit.gateway.dto.BookingRequestDto;
 import ru.practicum.shareit.gateway.util.RequestUtils;
 
+@Validated
 @RestController
 @RequestMapping(path = "/bookings")
 public class BookingController {
@@ -29,7 +32,7 @@ public class BookingController {
 	}
 
 	@PostMapping
-	public ResponseEntity<byte[]> create(@RequestHeader(USER_HEADER) Long userId,
+	public ResponseEntity<byte[]> create(@RequestHeader(USER_HEADER) @Positive Long userId,
 										  @Valid @RequestBody BookingRequestDto requestDto,
 										  HttpServletRequest request) {
 		return bookingClient.create(
@@ -40,8 +43,8 @@ public class BookingController {
 	}
 
 	@PatchMapping("/{bookingId}")
-	public ResponseEntity<byte[]> approve(@RequestHeader(USER_HEADER) Long ownerId,
-										  @PathVariable Long bookingId,
+	public ResponseEntity<byte[]> approve(@RequestHeader(USER_HEADER) @Positive Long ownerId,
+										  @PathVariable @Positive Long bookingId,
 										  @RequestParam("approved") boolean approved,
 										  HttpServletRequest request) {
 		return bookingClient.approve(
@@ -52,8 +55,8 @@ public class BookingController {
 	}
 
 	@GetMapping("/{bookingId}")
-	public ResponseEntity<byte[]> getById(@RequestHeader(USER_HEADER) Long userId,
-										  @PathVariable Long bookingId,
+	public ResponseEntity<byte[]> getById(@RequestHeader(USER_HEADER) @Positive Long userId,
+										  @PathVariable @Positive Long bookingId,
 										  HttpServletRequest request) {
 		return bookingClient.getById(
 			bookingId,
@@ -63,7 +66,7 @@ public class BookingController {
 	}
 
 	@GetMapping
-	public ResponseEntity<byte[]> getForBooker(@RequestHeader(USER_HEADER) Long userId,
+	public ResponseEntity<byte[]> getForBooker(@RequestHeader(USER_HEADER) @Positive Long userId,
 											   @RequestParam(name = "state", defaultValue = "ALL") String state,
 											   HttpServletRequest request) {
 		return bookingClient.getForBooker(
@@ -73,7 +76,7 @@ public class BookingController {
 	}
 
 	@GetMapping("/owner")
-	public ResponseEntity<byte[]> getForOwner(@RequestHeader(USER_HEADER) Long ownerId,
+	public ResponseEntity<byte[]> getForOwner(@RequestHeader(USER_HEADER) @Positive Long ownerId,
 											 @RequestParam(name = "state", defaultValue = "ALL") String state,
 											 HttpServletRequest request) {
 		return bookingClient.getForOwner(

@@ -2,6 +2,8 @@ package ru.practicum.shareit.gateway.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -77,6 +79,11 @@ public class ItemController {
 	public ResponseEntity<byte[]> search(@RequestHeader(USER_HEADER) Long userId,
 										  @RequestParam("text") String text,
 										  HttpServletRequest request) {
+		if (text == null || text.isBlank()) {
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			return ResponseEntity.ok().headers(headers).body("[]".getBytes(java.nio.charset.StandardCharsets.UTF_8));
+		}
 		return itemClient.search(
 			request.getQueryString(),
 			RequestUtils.copyHeaders(request)

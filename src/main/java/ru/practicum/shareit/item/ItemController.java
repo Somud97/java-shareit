@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import ru.practicum.shareit.item.dto.CommentDto;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
@@ -47,15 +48,12 @@ public class ItemController {
     @GetMapping("/{itemId}")
     public ItemDto findById(@RequestHeader(USER_HEADER) Long userId,
                             @PathVariable Long itemId) {
-        Item item = itemService.findById(itemId);
-        return ItemMapper.toItemDto(item);
+        return itemService.getItemWithDetails(userId, itemId);
     }
 
     @GetMapping
     public Collection<ItemDto> findByOwner(@RequestHeader(USER_HEADER) Long ownerId) {
-        return itemService.findByOwner(ownerId).stream()
-            .map(ItemMapper::toItemDto)
-            .collect(Collectors.toList());
+        return itemService.getItemsWithDetailsForOwner(ownerId);
     }
 
     @GetMapping("/search")
@@ -64,5 +62,12 @@ public class ItemController {
         return itemService.search(text).stream()
             .map(ItemMapper::toItemDto)
             .collect(Collectors.toList());
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentDto addComment(@RequestHeader(USER_HEADER) Long userId,
+                                 @PathVariable Long itemId,
+                                 @RequestBody CommentDto commentDto) {
+        return itemService.addComment(userId, itemId, commentDto);
     }
 }

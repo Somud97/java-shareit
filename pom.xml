@@ -26,4 +26,10 @@
 	<properties>
 		<java.version>21</java.version>
 	</properties>
+
+	<profiles>
+		<profile>
+			<id>check</id>
+		</profile>
+	</profiles>
 </project>
